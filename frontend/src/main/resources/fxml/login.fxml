@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.taskforge.ui.controller.LoginController"
+      styleClass="root-container"
+      alignment="CENTER"
+      spacing="0"
+      prefWidth="420" prefHeight="480">
+
+    <padding>
+        <Insets top="40" right="48" bottom="40" left="48"/>
+    </padding>
+
+    <!-- Logo / Title -->
+    <VBox alignment="CENTER" spacing="6">
+        <Label text="TaskForge" styleClass="app-title"/>
+        <Label text="Project Hub untuk Mahasiswa" styleClass="app-subtitle"/>
+    </VBox>
+
+    <Region prefHeight="32"/>
+
+    <!-- Form Card -->
+    <VBox styleClass="form-card" spacing="16">
+        <padding>
+            <Insets top="28" right="28" bottom="28" left="28"/>
+        </padding>
+
+        <Label text="Masuk ke Akun" styleClass="form-title"/>
+
+        <VBox spacing="6">
+            <Label text="Email" styleClass="field-label"/>
+            <TextField fx:id="emailField"
+                       promptText="Masukkan email kamu"
+                       styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Password" styleClass="field-label"/>
+            <PasswordField fx:id="passwordField"
+                           promptText="Masukkan password"
+                           styleClass="text-field"/>
+        </VBox>
+
+        <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+        <VBox spacing="8" alignment="CENTER">
+            <Button fx:id="loginButton"
+                    text="Masuk"
+                    onAction="#handleLogin"
+                    styleClass="primary-button"
+                    maxWidth="Infinity"/>
+
+            <ProgressIndicator fx:id="loadingIndicator"
+                               prefWidth="28" prefHeight="28"/>
+        </VBox>
+
+        <Hyperlink text="Belum punya akun? Daftar"
+                   onAction="#handleRegisterLink"
+                   styleClass="register-link"/>
+    </VBox>
+</VBox>

@@ -1,0 +1,77 @@
+package com.taskforge.ui.service;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.taskforge.ui.model.ApiResponse;
+import com.taskforge.ui.session.SessionManager;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+
+public class ApiClient {
+
+    private static final String BASE_URL = "http://localhost:8080";
+    private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
+
+    private ApiClient() {}
+
+    public static <T> ApiResponse<T> post(String path, Object body, Class<T> responseType) throws Exception {
+        String json = MAPPER.writeValueAsString(body);
+        HttpRequest request = buildRequest(path)
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+        return execute(request, responseType);
+    }
+
+    public static <T> ApiResponse<T> get(String path, Class<T> responseType) throws Exception {
+        HttpRequest request = buildRequest(path)
+                .GET()
+                .build();
+        return execute(request, responseType);
+    }
+
+    public static <T> ApiResponse<T> put(String path, Object body, Class<T> responseType) throws Exception {
+        String json = MAPPER.writeValueAsString(body);
+        HttpRequest request = buildRequest(path)
+                .PUT(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+        return execute(request, responseType);
+    }
+
+    public static <T> ApiResponse<T> delete(String path, Class<T> responseType) throws Exception {
+        HttpRequest request = buildRequest(path)
+                .DELETE()
+                .build();
+        return execute(request, responseType);
+    }
+
+    private static HttpRequest.Builder buildRequest(String path) {
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + path))
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .timeout(Duration.ofSeconds(30));
+
+        String token = SessionManager.getInstance().getToken();
+        if (token != null) {
+            builder.header("Authorization", "Bearer " + token);
+        }
+
+        return builder;
+    }
+
+    private static <T> ApiResponse<T> execute(HttpRequest request, Class<T> responseType) throws Exception {
+        HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        JavaType type = MAPPER.getTypeFactory()
+                .constructParametricType(ApiResponse.class, responseType);
+        return MAPPER.readValue(response.body(), type);
+    }
+}
