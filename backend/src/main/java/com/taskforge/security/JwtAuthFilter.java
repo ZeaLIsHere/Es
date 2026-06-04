@@ -1,6 +1,5 @@
 package com.taskforge.security;
 
-import com.taskforge.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +23,6 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -38,14 +36,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 String role = jwtUtil.extractRole(token);
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    var userDetails = userRepository.findByEmail(email).orElse(null);
-                    if (userDetails != null) {
-                        var authorities = List.of(new SimpleGrantedAuthority(role));
-                        var authToken = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, authorities);
-                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authToken);
-                    }
+                    // Principal is the email string → authentication.name == email in SpEL
+                    var authorities = List.of(new SimpleGrantedAuthority(role));
+                    var authToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             } catch (Exception e) {
                 log.debug("Failed to set authentication from token: {}", e.getMessage());

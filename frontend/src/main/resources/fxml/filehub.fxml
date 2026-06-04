@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.taskforge.ui.controller.FileHubController"
+            style="-fx-background-color: #F0F4FF;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12"
+              style="-fx-background-color: #1E3A8A; -fx-padding: 10 20 10 20;">
+            <Button text="← Kanban" onAction="#handleBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #93C5FD;
+                           -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #93C5FD;
+                           -fx-border-radius: 4px; -fx-padding: 4 10 4 10;"/>
+            <Label fx:id="projectTitleLabel"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="— File Hub"
+                   style="-fx-font-size: 14px; -fx-text-fill: #93C5FD;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" style="-fx-text-fill: #FCA5A5; -fx-font-size: 12px;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="12" style="-fx-padding: 20 24 20 24;">
+
+            <!-- Task selector + action buttons -->
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Task:" style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <ComboBox fx:id="taskSelector" onAction="#handleTaskSelected" prefWidth="320"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="uploadButton" text="⬆ Upload File" onAction="#handleUpload"
+                        style="-fx-background-color: #2563EB; -fx-text-fill: white; -fx-font-size: 13px;
+                               -fx-background-radius: 6px; -fx-padding: 7 14 7 14; -fx-cursor: hand;"/>
+                <Button fx:id="addLinkButton" text="🔗 Tambah Link" onAction="#handleAddLink"
+                        style="-fx-background-color: #7C3AED; -fx-text-fill: white; -fx-font-size: 13px;
+                               -fx-background-radius: 6px; -fx-padding: 7 14 7 14; -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- File list -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox fx:id="fileListPane" spacing="10"/>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

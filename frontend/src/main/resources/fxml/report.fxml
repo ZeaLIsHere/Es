@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.taskforge.ui.controller.ReportScoreController"
+            style="-fx-background-color: #F0F4FF;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12"
+              style="-fx-background-color: #1E3A8A; -fx-padding: 10 20 10 20;">
+            <Button text="← Kanban" onAction="#handleBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #93C5FD;
+                           -fx-font-size: 13px; -fx-cursor: hand; -fx-border-color: #93C5FD;
+                           -fx-border-radius: 4px; -fx-padding: 4 10 4 10;"/>
+            <Label fx:id="projectTitleLabel"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="— Contribution Score"
+                   style="-fx-font-size: 14px; -fx-text-fill: #93C5FD;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statusLabel" style="-fx-text-fill: #FCA5A5; -fx-font-size: 12px;"/>
+            <Button text="↻ Refresh" onAction="#handleRefresh"
+                    style="-fx-background-color: #374151; -fx-text-fill: white; -fx-font-size: 12px;
+                           -fx-background-radius: 5px; -fx-padding: 5 12 5 12; -fx-cursor: hand;"/>
+            <Button fx:id="generateReportButton" text="📋 Generate Laporan" onAction="#handleGenerateReport"
+                    style="-fx-background-color: #10B981; -fx-text-fill: white; -fx-font-size: 13px;
+                           -fx-font-weight: bold; -fx-background-radius: 6px;
+                           -fx-padding: 6 14 6 14; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="0">
+            <!-- Legend -->
+            <HBox spacing="20" alignment="CENTER_LEFT"
+                  style="-fx-padding: 10 24 10 24; -fx-background-color: white;
+                         -fx-border-color: #E5E7EB; -fx-border-width: 0 0 1 0;">
+                <Label text="Keterangan:"
+                       style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #374151;"/>
+                <Label text="●  Hijau = ≥ rata-rata"
+                       style="-fx-font-size: 12px; -fx-text-fill: #10B981;"/>
+                <Label text="●  Kuning = 50–80% rata-rata"
+                       style="-fx-font-size: 12px; -fx-text-fill: #F59E0B;"/>
+                <Label text="●  Merah = &lt; 50% rata-rata"
+                       style="-fx-font-size: 12px; -fx-text-fill: #EF4444;"/>
+            </HBox>
+
+            <!-- Score cards -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <VBox fx:id="scoresPane" spacing="12"
+                      style="-fx-padding: 20 24 20 24;"/>
+            </ScrollPane>
+
+            <VBox fx:id="reportPane"/>
+        </VBox>
+    </center>
+</BorderPane>

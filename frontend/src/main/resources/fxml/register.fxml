@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.taskforge.ui.controller.RegisterController"
+      styleClass="root-container"
+      alignment="CENTER"
+      spacing="0"
+      prefWidth="420" prefHeight="540">
+
+    <padding>
+        <Insets top="30" right="48" bottom="30" left="48"/>
+    </padding>
+
+    <!-- Title -->
+    <VBox alignment="CENTER" spacing="6">
+        <Label text="TaskForge" styleClass="app-title"/>
+        <Label text="Buat Akun Baru" styleClass="app-subtitle"/>
+    </VBox>
+
+    <Region prefHeight="20"/>
+
+    <!-- Form Card -->
+    <VBox styleClass="form-card" spacing="14">
+        <padding>
+            <Insets top="24" right="28" bottom="24" left="28"/>
+        </padding>
+
+        <Label text="Daftar" styleClass="form-title"/>
+
+        <VBox spacing="5">
+            <Label text="Nama Lengkap" styleClass="field-label"/>
+            <TextField fx:id="nameField" promptText="Masukkan nama lengkap" styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Email" styleClass="field-label"/>
+            <TextField fx:id="emailField" promptText="Masukkan email" styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Password" styleClass="field-label"/>
+            <PasswordField fx:id="passwordField" promptText="Minimal 8 karakter" styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Konfirmasi Password" styleClass="field-label"/>
+            <PasswordField fx:id="confirmPasswordField" promptText="Ulangi password" styleClass="text-field"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Role" styleClass="field-label"/>
+            <ComboBox fx:id="roleBox" maxWidth="Infinity"/>
+        </VBox>
+
+        <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+        <VBox spacing="8" alignment="CENTER">
+            <Button fx:id="registerButton"
+                    text="Daftar"
+                    onAction="#handleRegister"
+                    styleClass="primary-button"
+                    maxWidth="Infinity"/>
+            <ProgressIndicator fx:id="loadingIndicator" prefWidth="28" prefHeight="28"/>
+        </VBox>
+
+        <Hyperlink text="Sudah punya akun? Login"
+                   onAction="#handleBackToLogin"
+                   styleClass="register-link"/>
+    </VBox>
+</VBox>

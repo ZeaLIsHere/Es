@@ -19,9 +19,10 @@ public class SubTask {
     @Column(nullable = false, length = 200)
     private String title;
 
-    @Column(nullable = false)
+    // "done" field → Lombok generates isDone() correctly (avoiding isIsDone() bug)
+    @Column(name = "is_done", nullable = false)
     @Builder.Default
-    private boolean isDone = false;
+    private boolean done = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "milestone_task_id", nullable = false)

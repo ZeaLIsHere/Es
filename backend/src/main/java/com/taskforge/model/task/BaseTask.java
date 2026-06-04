@@ -44,8 +44,9 @@ public abstract class BaseTask implements Scorable {
     @Column(nullable = false)
     private LocalDateTime deadline;
 
-    @Column(nullable = false)
-    private boolean isOverdue = false;
+    // "overdue" field → Lombok generates isOverdue() correctly (avoiding isIsOverdue() bug)
+    @Column(name = "is_overdue", nullable = false)
+    private boolean overdue = false;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -53,7 +54,7 @@ public abstract class BaseTask implements Scorable {
 
     private LocalDateTime completedAt;
 
-    // Encapsulation: score is private, computed via calculateScore()
+    // Encapsulation: score is private, computed internally via calculateScore()
     private double score = 0.0;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -73,7 +74,7 @@ public abstract class BaseTask implements Scorable {
         this.status = TaskStatus.DONE;
         this.completedAt = LocalDateTime.now();
         this.score = calculateScore();
-        this.isOverdue = false;
+        this.overdue = false;
     }
 
     public void reassign(User newAssignee) {
@@ -82,7 +83,7 @@ public abstract class BaseTask implements Scorable {
 
     public void markOverdue() {
         if (this.deadline.isBefore(LocalDateTime.now()) && this.status != TaskStatus.DONE) {
-            this.isOverdue = true;
+            this.overdue = true;
         }
     }
 

@@ -12,6 +12,6 @@ public interface TaskRepository extends JpaRepository<BaseTask, Long> {
 
     List<BaseTask> findByProjectId(Long projectId);
 
-    @Query("SELECT t FROM BaseTask t WHERE t.deadline < :now AND t.status != 'DONE' AND t.isOverdue = false")
+    @Query("SELECT t FROM BaseTask t WHERE t.deadline < :now AND t.status != 'DONE' AND t.overdue = false")
     List<BaseTask> findOverdueTasks(@Param("now") LocalDateTime now);
 }
