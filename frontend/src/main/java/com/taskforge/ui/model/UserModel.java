@@ -9,6 +9,8 @@ public class UserModel {
     private String name;
     private String email;
     private String role;
+    private String nim;
+    private String photoPath;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -21,4 +23,13 @@ public class UserModel {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getNim() { return nim; }
+    public void setNim(String nim) { this.nim = nim; }
+
+    public String getPhotoPath() { return photoPath; }
+    public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
+
+    @Override
+    public String toString() { return name != null ? name + " (" + role + ")" : ""; }
 }

@@ -178,3 +178,152 @@
 .score-bar-low {
     -fx-accent: #EF4444;
 }
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+    -fx-background-color: #1E3A8A;
+    -fx-min-width: 200px;
+    -fx-pref-width: 200px;
+    -fx-padding: 0;
+}
+
+.sidebar-logo {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.sidebar-user-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+}
+
+.sidebar-user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #93C5FD;
+}
+
+.sidebar-nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #93C5FD;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 16 10 16;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-max-width: Infinity;
+}
+
+.sidebar-nav-btn:hover {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+}
+
+.sidebar-nav-btn-active {
+    -fx-background-color: #2563EB;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 16 10 16;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-max-width: Infinity;
+}
+
+.sidebar-logout-btn {
+    -fx-background-color: #7F1D1D;
+    -fx-text-fill: #FECACA;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 16 10 16;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-max-width: Infinity;
+}
+
+.sidebar-logout-btn:hover {
+    -fx-background-color: #DC2626;
+    -fx-text-fill: white;
+}
+
+/* ==================== STAT CARDS ==================== */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+    -fx-padding: 16 20 16 20;
+    -fx-pref-width: 180;
+    -fx-min-width: 150;
+}
+
+.stat-card-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E3A8A;
+}
+
+.stat-card-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B7280;
+}
+
+/* ==================== SEARCH BAR ==================== */
+.search-field {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-pref-height: 36px;
+    -fx-font-size: 13px;
+    -fx-padding: 0 12 0 12;
+    -fx-pref-width: 280;
+}
+
+.search-field:focused {
+    -fx-border-color: #3B82F6;
+}
+
+/* ==================== PROJECT CARDS (NEW) ==================== */
+.project-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 10, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+.project-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(37,99,235,0.25), 16, 0, 0, 4);
+}
+
+.project-card-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1F2937;
+    -fx-wrap-text: true;
+}
+
+.project-card-meta {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B7280;
+}
+
+.project-card-overdue {
+    -fx-font-size: 11px;
+    -fx-text-fill: #DC2626;
+    -fx-font-weight: bold;
+}
+
+.progress-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #374151;
+}
+
+/* ==================== PAGE BG ==================== */
+.page-bg {
+    -fx-background-color: #F1F5F9;
+}
+

@@ -29,6 +29,12 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Column(length = 20)
+    private String nim;
+
+    @Column(length = 500)
+    private String photoPath;
+
     public enum Role {
         KETUA, ANGGOTA
     }

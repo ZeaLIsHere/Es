@@ -12,6 +12,8 @@ public class UserResponse {
     private String name;
     private String email;
     private String role;
+    private String nim;
+    private String photoPath;
 
     public static UserResponse from(User user) {
         return UserResponse.builder()
@@ -19,6 +21,8 @@ public class UserResponse {
                 .name(user.getName())
                 .email(user.getEmail())
                 .role(user.getRole().name())
+                .nim(user.getNim())
+                .photoPath(user.getPhotoPath())
                 .build();
     }
 }

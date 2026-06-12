@@ -3,7 +3,6 @@ package com.taskforge.service;
 import com.taskforge.dto.request.MemberRequest;
 import com.taskforge.dto.request.ProjectRequest;
 import com.taskforge.dto.response.ProjectResponse;
-import com.taskforge.dto.response.UserResponse;
 import com.taskforge.exception.DuplicateResourceException;
 import com.taskforge.exception.ResourceNotFoundException;
 import com.taskforge.model.Project;
@@ -28,6 +27,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class ProjectServiceTest {
 
     @Mock private ProjectRepository projectRepository;

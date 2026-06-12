@@ -4,7 +4,6 @@ import com.taskforge.model.*;
 import com.taskforge.model.file.LinkedFile;
 import com.taskforge.model.file.UploadedFile;
 import com.taskforge.model.task.BaseTask.Priority;
-import com.taskforge.model.task.BaseTask.TaskStatus;
 import com.taskforge.model.task.SimpleTask;
 import com.taskforge.repository.*;
 import com.taskforge.service.ContributionService;

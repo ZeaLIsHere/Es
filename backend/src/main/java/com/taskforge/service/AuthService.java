@@ -5,7 +5,6 @@ import com.taskforge.dto.request.RegisterRequest;
 import com.taskforge.dto.response.AuthResponse;
 import com.taskforge.dto.response.UserResponse;
 import com.taskforge.exception.DuplicateResourceException;
-import com.taskforge.exception.ResourceNotFoundException;
 import com.taskforge.model.User;
 import com.taskforge.repository.UserRepository;
 import com.taskforge.security.JwtUtil;
