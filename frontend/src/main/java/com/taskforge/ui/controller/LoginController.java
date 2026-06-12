@@ -63,7 +63,6 @@ public class LoginController {
 
         loginTask.setOnFailed(event -> {
             setLoading(false);
-            Throwable ex = loginTask.getException();
             showError("Tidak dapat terhubung ke server. Pastikan backend berjalan.");
         });
 

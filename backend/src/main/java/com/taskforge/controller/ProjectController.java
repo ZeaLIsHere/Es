@@ -6,7 +6,6 @@ import com.taskforge.dto.request.ProjectRequest;
 import com.taskforge.dto.response.ActivityLogResponse;
 import com.taskforge.dto.response.ProjectResponse;
 import com.taskforge.dto.response.UserResponse;
-import com.taskforge.model.ActivityLog;
 import com.taskforge.repository.ActivityLogRepository;
 import com.taskforge.service.ProjectService;
 import jakarta.validation.Valid;

@@ -20,8 +20,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,7 +36,6 @@ public class KanbanController {
 
     private ProjectModel currentProject;
     private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 
     public void initWithProject(ProjectModel project) {
         this.currentProject = project;

@@ -53,6 +53,41 @@ public class ApiClient {
         return execute(request, responseType);
     }
 
+    public static <T> ApiResponse<T> postMultipart(String path, java.io.File file, Class<T> responseType) throws Exception {
+        String boundary = "----Boundary" + System.currentTimeMillis();
+        byte[] fileBytes = java.nio.file.Files.readAllBytes(file.toPath());
+        String fileName = file.getName();
+        String contentType = fileName.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
+
+        byte[] body = buildMultipartBody(boundary, "file", fileName, contentType, fileBytes);
+
+        String token = SessionManager.getInstance().getToken();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + path))
+                .header("Content-Type", "multipart/form-data; boundary=" + boundary)
+                .header("Accept", "application/json")
+                .header("Authorization", token != null ? "Bearer " + token : "")
+                .timeout(Duration.ofSeconds(30))
+                .POST(HttpRequest.BodyPublishers.ofByteArray(body))
+                .build();
+
+        HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        JavaType type = MAPPER.getTypeFactory().constructParametricType(ApiResponse.class, responseType);
+        return MAPPER.readValue(response.body(), type);
+    }
+
+    private static byte[] buildMultipartBody(String boundary, String fieldName,
+                                              String fileName, String contentType, byte[] data) throws Exception {
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        String header = "--" + boundary + "\r\n"
+                + "Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"\r\n"
+                + "Content-Type: " + contentType + "\r\n\r\n";
+        out.write(header.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        out.write(data);
+        out.write(("\r\n--" + boundary + "--\r\n").getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        return out.toByteArray();
+    }
+
     private static HttpRequest.Builder buildRequest(String path) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + path))

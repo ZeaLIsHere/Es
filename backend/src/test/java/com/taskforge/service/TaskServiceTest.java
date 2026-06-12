@@ -10,7 +10,6 @@ import com.taskforge.model.task.BaseTask.TaskStatus;
 import com.taskforge.model.task.SimpleTask;
 import com.taskforge.repository.TaskRepository;
 import com.taskforge.repository.UserRepository;
-import com.taskforge.service.ContributionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +27,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class TaskServiceTest {
 
     @Mock private TaskRepository taskRepository;
