@@ -6,12 +6,12 @@
 | | |
 |---|---|
 | **Versi Dokumen** | 1.0 |
-| **Tanggal** | [GANTI_TANGGAL_HARI_INI] |
+| **Tanggal** | 14/06/2026 |
 | **Status** | Draft |
 | **Dibuat oleh** | [GANTI_NAMA_KETUA_KELOMPOK] |
 | **Mata Kuliah** | Pemrograman Berbasis Objek (PBO) |
-| **Institusi** | [GANTI_NAMA_KAMPUS] |
-| **Dosen Pengampu** | [GANTI_NAMA_DOSEN] |
+| **Institusi** | GTLP |
+| **Asisten Lab** | BANG ANDRE |
 
 ---
 
