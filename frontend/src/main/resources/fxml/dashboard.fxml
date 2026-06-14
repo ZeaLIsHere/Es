@@ -16,10 +16,17 @@
 
             <!-- Logo -->
             <HBox alignment="CENTER_LEFT" spacing="10"
-                  style="-fx-padding: 20 16 18 20;
+                  style="-fx-padding: 16 16 16 16;
                          -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
-                <Label text="TaskForge"
-                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <ImageView fitWidth="34" fitHeight="34" preserveRatio="true" smooth="true">
+                    <image><Image url="@/images/taskforge-icon-48.png"/></image>
+                </ImageView>
+                <HBox spacing="0" alignment="CENTER_LEFT">
+                    <Label text="Task"
+                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Forge"
+                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #6366F1;"/>
+                </HBox>
             </HBox>
 
             <!-- User Profile Section -->
