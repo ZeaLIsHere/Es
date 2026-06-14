@@ -374,12 +374,25 @@ public class DashboardController {
         pctLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: " + accentColor + ";");
         progressHeader.getChildren().addAll(tasksLabel, spacer, pctLabel);
 
-        ProgressBar progress = new ProgressBar(progressVal);
-        progress.setMaxWidth(Double.MAX_VALUE);
-        progress.setStyle("-fx-accent: " + accentColor + ";");
-        progress.setPrefHeight(6);
+        StackPane progressTrack = new StackPane();
+        progressTrack.setMaxWidth(Double.MAX_VALUE);
+        progressTrack.setPrefHeight(7);
+        progressTrack.setStyle("-fx-background-color: #E2E8F0; -fx-background-radius: 4;");
 
-        body.getChildren().addAll(title, deadline, members, progressHeader, progress);
+        Region progressFill = new Region();
+        progressFill.setPrefHeight(7);
+        progressFill.setStyle("-fx-background-color: " + accentColor + "; -fx-background-radius: 4;");
+        progressFill.setMaxWidth(Double.MAX_VALUE);
+        javafx.geometry.Pos fillPos = javafx.geometry.Pos.CENTER_LEFT;
+        StackPane.setAlignment(progressFill, fillPos);
+
+        double finalProgressVal = progressVal;
+        progressTrack.widthProperty().addListener((obs, oldW, newW) ->
+            progressFill.setPrefWidth(newW.doubleValue() * finalProgressVal)
+        );
+        progressTrack.getChildren().add(progressFill);
+
+        body.getChildren().addAll(title, deadline, members, progressHeader, progressTrack);
 
         if (project.getOverdueTaskCount() > 0) {
             Label overdueLabel = new Label("  " + project.getOverdueTaskCount() + " task overdue");
@@ -482,7 +495,7 @@ public class DashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Stage stage = (Stage) userNameLabel.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 420, 480);
+            Scene scene = new Scene(loader.load(), 480, 660);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
             stage.setTitle("TaskForge — Login");

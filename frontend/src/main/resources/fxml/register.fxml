@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
@@ -9,6 +10,19 @@
            style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #EEF2FF, #F1F5F9);">
 
     <VBox alignment="CENTER" spacing="0" maxWidth="400">
+
+        <!-- Logo header di luar card -->
+        <VBox alignment="CENTER" spacing="8" style="-fx-padding: 0 0 20 0;">
+            <ImageView fitWidth="60" fitHeight="60" preserveRatio="true" smooth="true">
+                <image><Image url="@/images/taskforge-icon-128.png"/></image>
+            </ImageView>
+            <HBox alignment="CENTER" spacing="0">
+                <Label text="Task"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                <Label text="Forge"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #4F46E5;"/>
+            </HBox>
+        </VBox>
 
         <!-- Card -->
         <VBox styleClass="form-card" spacing="14">
