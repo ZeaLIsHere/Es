@@ -9,8 +9,8 @@
 | **Nama Kelompok** | Raja Iblis Ori |
 | **Anggota Kelompok** | Tariq Rahmadari  (241401021), Blessly Victory Deo Silaban (241401060), Muhammad Al Farel Azhar (241401009)), Gregorian Goclio Sinaga (241401087),Deofajar Jhonropinus Situmorang (241401102)|
 | **Mata Kuliah** | Pemrograman Berbasis Objek (PBO) |
-| **Institusi** | [UNIVERSITAS SUMATERA UTARA] |
-| **ASLAB** | [BANG ANDRE] |
+| **Institusi** | UNIVERSITAS SUMATERA UTARA |
+| **ASLAB** | BANG ANDRE |
 
 
 **Cara menjalankan aplikasi (langkah instalasi dan dependencies).**
@@ -21,6 +21,14 @@
 3. cd backend
     mvn clean package -DskipTests
     mvn spring-boot:run
+
+**FITUR UTAMA**
+1. Dashboard Interaktif
+2. Manajemen Proyek & Tugas
+3. Papan Kanban (Kanban Board)
+4. File Hub Terpusat
+5. Sistem Notifikasi
+6. Tampilan Profil
 
 
 ---
