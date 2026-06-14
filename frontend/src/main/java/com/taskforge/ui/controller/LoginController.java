@@ -3,12 +3,11 @@ package com.taskforge.ui.controller;
 import com.taskforge.ui.model.ApiResponse;
 import com.taskforge.ui.model.AuthResponse;
 import com.taskforge.ui.service.ApiClient;
+import com.taskforge.ui.util.SceneNavigator;
 import com.taskforge.ui.session.SessionManager;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -74,10 +73,9 @@ public class LoginController {
     @FXML
     public void handleRegisterLink() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/register.fxml"));
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 420, 520));
-            stage.setTitle("TaskForge — Daftar Akun");
+            SceneNavigator.navigate(stage, "/fxml/register.fxml", "TaskForge — Daftar Akun", 420, 520);
+            stage.setResizable(false);
         } catch (Exception e) {
             showError("Gagal membuka halaman registrasi");
         }
@@ -85,10 +83,8 @@ public class LoginController {
 
     private void navigateToDashboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 1200, 700));
-            stage.setTitle("TaskForge — Dashboard");
+            SceneNavigator.navigate(stage, "/fxml/dashboard.fxml", "TaskForge — Dashboard", 1100, 700, false);
         } catch (Exception e) {
             showError("Gagal membuka dashboard: " + e.getMessage());
         }

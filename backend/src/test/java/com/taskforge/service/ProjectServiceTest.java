@@ -46,6 +46,7 @@ class ProjectServiceTest {
 
         project = Project.builder()
                 .id(10L).title("Proyek Test")
+                .maxMembers(4)
                 .owner(ketua)
                 .members(new HashSet<>())
                 .tasks(new ArrayList<>())
@@ -58,6 +59,7 @@ class ProjectServiceTest {
     void createProject_success() {
         ProjectRequest req = new ProjectRequest();
         req.setTitle("Proyek Baru");
+        req.setMaxMembers(4);
 
         when(userRepository.findByEmail("ketua@test.com")).thenReturn(Optional.of(ketua));
         when(projectRepository.save(any(Project.class))).thenAnswer(inv -> {

@@ -67,6 +67,7 @@ public class DataSeeder implements CommandLineRunner {
                 .title("Tugas Akhir Sistem Informasi Perpustakaan")
                 .description("Pengembangan sistem informasi manajemen perpustakaan kampus berbasis web")
                 .deadline(LocalDateTime.now().plusDays(30))
+                .maxMembers(4)
                 .owner(ketua)
                 .build();
         project.getMembers().add(rizki);

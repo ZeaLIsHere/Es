@@ -1,6 +1,9 @@
 package com.taskforge.dto.request;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +21,9 @@ public class ProjectRequest {
     private String description;
 
     private LocalDateTime deadline;
+
+    @NotNull(message = "Max anggota wajib diisi")
+    @Min(value = 2, message = "Max anggota minimal 2 (termasuk ketua)")
+    @Max(value = 20, message = "Max anggota maksimal 20")
+    private Integer maxMembers;
 }

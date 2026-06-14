@@ -5,24 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.taskforge.ui.model.ApiResponse;
 import com.taskforge.ui.model.ProjectModel;
-import com.taskforge.ui.model.UserModel;
 import com.taskforge.ui.service.ApiClient;
-import com.taskforge.ui.session.SessionManager;
-import javafx.application.Platform;
+import com.taskforge.ui.util.SceneNavigator;
+import com.taskforge.ui.util.SidebarProfileBinder;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.io.File;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +24,6 @@ public class DashboardController {
     @FXML private Label userNameLabel;
     @FXML private Label userNimLabel;
     @FXML private Label userRoleLabel;
-    @FXML private Button newProjectButton;
     @FXML private FlowPane projectsPane;
     @FXML private ProgressIndicator loadingIndicator;
     @FXML private Label statusLabel;
@@ -40,9 +31,7 @@ public class DashboardController {
     @FXML private Label statOverdue;
     @FXML private Label statSelesai;
     @FXML private TextField searchField;
-    @FXML private Circle avatarCircle;
     @FXML private Label avatarInitials;
-    @FXML private ImageView profilePhoto;
 
     private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd MMM yyyy");
@@ -61,207 +50,30 @@ public class DashboardController {
         loadingIndicator.setVisible(false);
         statusLabel.setText("");
         refreshSidebarProfile();
-
-        boolean isKetua = SessionManager.getInstance().isKetua();
-        newProjectButton.setVisible(isKetua);
-        newProjectButton.setManaged(isKetua);
-
         loadProjects();
     }
 
     // ─── Sidebar / Profile ───────────────────────────────────────────────────
 
     private void refreshSidebarProfile() {
-        UserModel user = SessionManager.getInstance().getCurrentUser();
-        userNameLabel.setText(user.getName());
-        userRoleLabel.setText(user.getRole());
-
-        // NIM
-        if (user.getNim() != null && !user.getNim().isBlank()) {
-            userNimLabel.setText("NIM: " + user.getNim());
-            userNimLabel.setVisible(true);
-            userNimLabel.setManaged(true);
-        } else {
-            userNimLabel.setText("");
-            userNimLabel.setVisible(false);
-            userNimLabel.setManaged(false);
-        }
-
-        // Initials avatar
-        String initials = getInitials(user.getName());
-        avatarInitials.setText(initials);
-
-        // Photo if available
-        loadPhoto(user.isHasPhoto());
-    }
-
-    private void loadPhoto(boolean hasPhoto) {
-        if (!hasPhoto) {
-            showInitialsAvatar();
-            return;
-        }
-        // Fetch photo via authenticated API endpoint — bukan baca file system langsung
-        Task<Image> photoTask = new Task<>() {
-            @Override
-            protected Image call() throws Exception {
-                byte[] bytes = ApiClient.getBytes("/api/users/me/photo");
-                return new Image(new java.io.ByteArrayInputStream(bytes), 56, 56, false, true);
-            }
-        };
-        photoTask.setOnSucceeded(e -> Platform.runLater(() -> {
-            Image img = photoTask.getValue();
-            if (img != null && !img.isError()) {
-                profilePhoto.setImage(img);
-                profilePhoto.setVisible(true);
-                avatarCircle.setVisible(false);
-                avatarInitials.setVisible(false);
-            } else {
-                showInitialsAvatar();
-            }
-        }));
-        photoTask.setOnFailed(e -> Platform.runLater(this::showInitialsAvatar));
-        Thread t = new Thread(photoTask);
-        t.setDaemon(true);
-        t.start();
-    }
-
-    private void showInitialsAvatar() {
-        profilePhoto.setVisible(false);
-        avatarCircle.setVisible(true);
-        avatarInitials.setVisible(true);
-    }
-
-    private String getInitials(String name) {
-        if (name == null || name.isBlank()) return "?";
-        String[] parts = name.trim().split("\\s+");
-        if (parts.length == 1) return parts[0].substring(0, Math.min(2, parts[0].length())).toUpperCase();
-        return ("" + parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        SidebarProfileBinder.refresh(
+                userNameLabel, userNimLabel, userRoleLabel, avatarInitials
+        );
     }
 
     @FXML
-    public void handleEditProfile() {
-        UserModel user = SessionManager.getInstance().getCurrentUser();
-
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Edit Profil");
-        dialog.setHeaderText("Perbarui data profil kamu");
-
-        // Form fields
-        TextField nameField = new TextField(user.getName());
-        nameField.setPromptText("Nama lengkap");
-        nameField.setStyle("-fx-pref-height: 34px; -fx-font-size: 13px;");
-
-        TextField nimField = new TextField(user.getNim() != null ? user.getNim() : "");
-        nimField.setPromptText("Nomor Induk Mahasiswa");
-        nimField.setStyle("-fx-pref-height: 34px; -fx-font-size: 13px;");
-
-        // Photo picker
-        Label photoStatusLabel = new Label(
-            user.isHasPhoto() ? "Foto sudah ada" : "Belum ada foto"
-        );
-        photoStatusLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #6B7280;");
-
-        final File[] selectedPhoto = {null};
-        Button choosePhotoBtn = new Button("Pilih Foto...");
-        choosePhotoBtn.setStyle(
-            "-fx-background-color: #E5E7EB; -fx-text-fill: #374151; " +
-            "-fx-font-size: 12px; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 5 12 5 12;"
-        );
-        choosePhotoBtn.setOnAction(e -> {
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Pilih Foto Profil");
-            fc.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Gambar", "*.jpg", "*.jpeg", "*.png")
-            );
-            File f = fc.showOpenDialog(choosePhotoBtn.getScene().getWindow());
-            if (f != null) {
-                selectedPhoto[0] = f;
-                photoStatusLabel.setText("Foto dipilih: " + f.getName());
-                photoStatusLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #059669;");
-            }
-        });
-
-        GridPane grid = new GridPane();
-        grid.setHgap(12);
-        grid.setVgap(12);
-        grid.setPadding(new Insets(16));
-        grid.setMinWidth(360);
-
-        Label lName = new Label("Nama:");
-        lName.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
-        Label lNim = new Label("NIM:");
-        lNim.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
-        Label lPhoto = new Label("Foto Profil:");
-        lPhoto.setStyle("-fx-font-weight: bold; -fx-font-size: 12px;");
-
-        GridPane.setHgrow(nameField, Priority.ALWAYS);
-        GridPane.setHgrow(nimField, Priority.ALWAYS);
-
-        grid.addRow(0, lName, nameField);
-        grid.addRow(1, lNim, nimField);
-        grid.addRow(2, lPhoto, choosePhotoBtn);
-        grid.add(photoStatusLabel, 1, 3);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        dialog.getDialogPane().setPrefWidth(420);
-
-        dialog.showAndWait().ifPresent(result -> {
-            if (result != ButtonType.OK) return;
-            String newName = nameField.getText().trim();
-            String newNim = nimField.getText().trim();
-            if (newName.isBlank()) {
-                statusLabel.setText("Nama tidak boleh kosong.");
-                return;
-            }
-            submitProfileUpdate(newName, newNim, selectedPhoto[0]);
-        });
+    public void handleProyek() {
+        navigate("/fxml/proyek.fxml", "TaskForge — Proyek");
     }
 
-    private void submitProfileUpdate(String name, String nim, File photoFile) {
-        Task<UserModel> updateTask = new Task<>() {
-            @Override
-            protected UserModel call() throws Exception {
-                // 1. Update name + NIM
-                var body = new java.util.HashMap<String, Object>();
-                body.put("name", name);
-                body.put("nim", nim.isEmpty() ? null : nim);
-                ApiResponse<Object> resp = ApiClient.put("/api/users/me", body, Object.class);
-                if (!resp.isSuccess()) throw new Exception(resp.getMessage());
+    @FXML
+    public void handleProfil() {
+        navigate("/fxml/profil.fxml", "TaskForge — Profil");
+    }
 
-                // 2. Upload photo if selected
-                if (photoFile != null) {
-                    ApiResponse<Object> photoResp = ApiClient.postMultipart(
-                        "/api/users/me/photo", photoFile, Object.class);
-                    if (!photoResp.isSuccess()) throw new Exception(photoResp.getMessage());
-                }
-
-                // 3. Re-fetch updated profile
-                ApiResponse<Object> meResp = ApiClient.get("/api/users/me", Object.class);
-                if (!meResp.isSuccess()) throw new Exception(meResp.getMessage());
-                return MAPPER.convertValue(meResp.getData(), UserModel.class);
-            }
-        };
-
-        updateTask.setOnSucceeded(e -> {
-            UserModel updated = updateTask.getValue();
-            // Update session dengan data terbaru
-            SessionManager.getInstance().setSession(
-                SessionManager.getInstance().getToken(), updated
-            );
-            Platform.runLater(() -> {
-                refreshSidebarProfile();
-                statusLabel.setText("");
-            });
-        });
-
-        updateTask.setOnFailed(e -> Platform.runLater(() ->
-            statusLabel.setText("Gagal update profil: " + updateTask.getException().getMessage())
-        ));
-
-        Thread t = new Thread(updateTask);
-        t.setDaemon(true);
-        t.start();
+    @FXML
+    public void handleNotifikasi() {
+        navigate("/fxml/notifikasi.fxml", "TaskForge — Notifikasi");
     }
 
     // ─── Projects ────────────────────────────────────────────────────────────
@@ -396,7 +208,7 @@ public class DashboardController {
         }
 
         card.getChildren().addAll(accentBar, body);
-        card.setOnMouseClicked(e -> openKanban(project));
+        card.setOnMouseClicked(e -> openProjectDetail(project));
 
         card.setOnMouseEntered(e -> card.setStyle(
             "-fx-background-color: " + accentLight + "; -fx-background-radius: 12px; " +
@@ -410,89 +222,29 @@ public class DashboardController {
         return card;
     }
 
-    private void openKanban(ProjectModel project) {
+    private void openProjectDetail(ProjectModel project) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/kanban.fxml"));
             Stage stage = (Stage) projectsPane.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1200, 700);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            KanbanController controller = loader.getController();
+            ProjectDetailController controller = SceneNavigator.navigate(
+                    stage, "/fxml/project-detail.fxml",
+                    "TaskForge — " + project.getTitle(), 1100, 700);
             controller.initWithProject(project);
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — " + project.getTitle());
         } catch (Exception e) {
-            statusLabel.setText("Gagal membuka Kanban: " + e.getMessage());
+            statusLabel.setText("Gagal membuka detail proyek: " + e.getMessage());
         }
     }
 
     @FXML
-    public void handleNewProject() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Buat Proyek Baru");
-        dialog.setHeaderText("Isi detail proyek");
-
-        TextField titleField = new TextField();
-        titleField.setPromptText("Judul proyek");
-        TextArea descField = new TextArea();
-        descField.setPromptText("Deskripsi (opsional)");
-        descField.setPrefRowCount(3);
-        DatePicker deadlinePicker = new DatePicker();
-        deadlinePicker.setPromptText("Pilih deadline (opsional)");
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(10));
-        grid.addRow(0, new Label("Judul:"), titleField);
-        grid.addRow(1, new Label("Deskripsi:"), descField);
-        grid.addRow(2, new Label("Deadline:"), deadlinePicker);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        dialog.showAndWait().ifPresent(result -> {
-            if (result == ButtonType.OK && !titleField.getText().isBlank()) {
-                String deadlineStr = null;
-                if (deadlinePicker.getValue() != null) {
-                    deadlineStr = deadlinePicker.getValue().atTime(23, 59, 0).toString();
-                }
-                submitNewProject(titleField.getText().trim(), descField.getText().trim(), deadlineStr);
-            }
-        });
-    }
-
-    private void submitNewProject(String title, String description, String deadline) {
-        Task<Void> createTask = new Task<>() {
-            @Override
-            protected Void call() throws Exception {
-                var body = new java.util.HashMap<String, Object>();
-                body.put("title", title);
-                body.put("description", description.isEmpty() ? null : description);
-                if (deadline != null) body.put("deadline", deadline);
-                ApiClient.post("/api/projects", body, Object.class);
-                return null;
-            }
-        };
-        createTask.setOnSucceeded(e -> loadProjects());
-        createTask.setOnFailed(e -> Platform.runLater(
-                () -> statusLabel.setText("Gagal membuat proyek: " + createTask.getException().getMessage())));
-        Thread t = new Thread(createTask);
-        t.setDaemon(true);
-        t.start();
-    }
-
-    @FXML
     public void handleLogout() {
-        SessionManager.getInstance().clearSession();
+        SidebarProfileBinder.logout(userNameLabel);
+    }
+
+    private void navigate(String fxml, String title) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Stage stage = (Stage) userNameLabel.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 480, 660);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — Login");
+            SceneNavigator.navigate(stage, fxml, title, 1100, 700);
         } catch (Exception e) {
-            statusLabel.setText("Gagal logout");
+            statusLabel.setText("Gagal navigasi: " + e.getMessage());
         }
     }
 }

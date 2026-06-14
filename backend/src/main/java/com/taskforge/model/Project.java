@@ -32,6 +32,10 @@ public class Project {
 
     private LocalDateTime deadline;
 
+    @Column(name = "max_members")
+    @Builder.Default
+    private Integer maxMembers = 4;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

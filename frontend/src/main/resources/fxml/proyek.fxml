@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.taskforge.ui.controller.ProyekController"
+            style="-fx-background-color: #F8FAFC;">
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <left>
+        <VBox minWidth="220" prefWidth="220" maxWidth="220" spacing="0"
+              style="-fx-background-color: #0F172A;">
+
+            <HBox alignment="CENTER_LEFT" spacing="10"
+                  style="-fx-padding: 16 16 16 16;
+                         -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
+                <ImageView fitWidth="34" fitHeight="34" preserveRatio="true" smooth="true">
+                    <image><Image url="@/images/taskforge-icon-48.png"/></image>
+                </ImageView>
+                <HBox spacing="0" alignment="CENTER_LEFT">
+                    <Label text="Task"
+                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Forge"
+                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #6366F1;"/>
+                </HBox>
+            </HBox>
+
+            <VBox spacing="6"
+                  style="-fx-padding: 16 16 16 16;
+                         -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
+                <StackPane prefWidth="56" prefHeight="56">
+                    <Rectangle width="56" height="56" arcWidth="12" arcHeight="12"
+                               style="-fx-fill: #0F172A;"/>
+                    <Label fx:id="avatarInitials" text="?"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"
+                           StackPane.alignment="CENTER"/>
+                </StackPane>
+
+                <Label text="AKUN SAYA"
+                       style="-fx-font-size: 9px; -fx-font-weight: bold;
+                              -fx-text-fill: #475569; -fx-padding: 6 0 0 0;"/>
+                <Label fx:id="userNameLabel"
+                       style="-fx-font-size: 13px; -fx-font-weight: bold;
+                              -fx-text-fill: #F1F5F9; -fx-wrap-text: true;"
+                       maxWidth="188"/>
+                <Label fx:id="userNimLabel" text=""
+                       style="-fx-font-size: 11px; -fx-text-fill: #64748B;"/>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label fx:id="userRoleLabel"
+                           style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #A5B4FC;
+                                  -fx-background-color: #1E1B4B; -fx-background-radius: 20;
+                                  -fx-padding: 3 10 3 10;"/>
+                </HBox>
+
+            </VBox>
+
+            <VBox spacing="0">
+                <Label text="WORKSPACE"
+                       style="-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #475569;
+                              -fx-padding: 16 0 6 20;"/>
+                <Button text="  Dashboard" onAction="#handleDashboard"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Proyek"
+                        styleClass="sidebar-nav-btn-active"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Notifikasi" onAction="#handleNotifikasi"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Profil" onAction="#handleProfil"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox style="-fx-border-color: #1E293B; -fx-border-width: 1 0 0 0;">
+                <Button text="  Keluar" onAction="#handleLogout"
+                        styleClass="sidebar-logout-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <center>
+        <VBox spacing="0" style="-fx-background-color: #F8FAFC;">
+
+            <HBox alignment="CENTER_LEFT" spacing="12"
+                  style="-fx-padding: 16 28 14 28; -fx-background-color: white;
+                         -fx-border-color: #E2E8F0; -fx-border-width: 0 0 1 0;
+                         -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.04), 4, 0, 0, 2);">
+                <VBox spacing="2">
+                    <Label text="Proyek"
+                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                    <Label text="Kelola semua proyek kelompok kamu di sini"
+                           style="-fx-font-size: 12px; -fx-text-fill: #94A3B8;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="newProjectButton" text="+ Buat Proyek Baru"
+                        onAction="#handleNewProject"
+                        style="-fx-background-color: #4F46E5; -fx-text-fill: white;
+                               -fx-font-size: 13px; -fx-font-weight: bold;
+                               -fx-background-radius: 10; -fx-padding: 9 20 9 20;
+                               -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- Tabs -->
+            <HBox spacing="8" alignment="CENTER_LEFT"
+                  style="-fx-padding: 16 28 0 28; -fx-background-color: #F8FAFC;">
+                <Button fx:id="tabMineButton" text="Proyek Saya" onAction="#handleTabMine"
+                        styleClass="proyek-tab-active"/>
+                <Button fx:id="tabAvailableButton" text="Tersedia (0)" onAction="#handleTabAvailable"
+                        styleClass="proyek-tab"/>
+            </HBox>
+
+            <ScrollPane fitToWidth="true"
+                        style="-fx-background: transparent; -fx-background-color: transparent;"
+                        VBox.vgrow="ALWAYS">
+                <VBox spacing="16" style="-fx-padding: 20 28 28 28;">
+
+                    <ProgressIndicator fx:id="loadingIndicator"
+                                       prefWidth="36" prefHeight="36" visible="false"/>
+                    <Label fx:id="statusLabel"
+                           style="-fx-text-fill: #EF4444; -fx-font-size: 13px;"/>
+
+                    <FlowPane fx:id="projectsPane" hgap="20" vgap="20"/>
+
+                    <VBox fx:id="emptyStatePane" alignment="CENTER" spacing="10"
+                          visible="false" managed="false"
+                          style="-fx-padding: 60 0 60 0;">
+                        <Label fx:id="emptyTitleLabel" text="Belum ada proyek"
+                               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #64748B;"/>
+                        <Label fx:id="emptySubtitleLabel" text="Proyek kamu akan muncul di sini"
+                               style="-fx-font-size: 13px; -fx-text-fill: #94A3B8;"/>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+</BorderPane>

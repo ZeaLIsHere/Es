@@ -17,6 +17,7 @@ public class ProjectResponse {
     private String description;
     private LocalDateTime deadline;
     private LocalDateTime createdAt;
+    private Integer maxMembers;
     private UserResponse owner;
     private List<UserResponse> members;
     private int taskCount;
@@ -40,6 +41,7 @@ public class ProjectResponse {
                 .description(project.getDescription())
                 .deadline(project.getDeadline())
                 .createdAt(project.getCreatedAt())
+                .maxMembers(project.getMaxMembers() != null ? project.getMaxMembers() : 4)
                 .owner(UserResponse.from(project.getOwner()))
                 .members(memberList)
                 .taskCount((int) total)

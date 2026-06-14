@@ -63,6 +63,24 @@ public class ContributionService {
         scoreRepository.saveAll(all);
     }
 
+    @Transactional
+    public void addScoreForComment(User user, Project project) {
+        ContributionScore score = scoreRepository
+                .findByUserIdAndProjectId(user.getId(), project.getId())
+                .orElse(ContributionScore.builder()
+                        .user(user)
+                        .project(project)
+                        .build());
+        
+        score.setScore(score.getScore() + 2.5);
+        score.setLastUpdated(LocalDateTime.now());
+        scoreRepository.save(score);
+
+        recalculatePercentages(project);
+        
+        log.info("Score +2.5 untuk {} di proyek '{}' (komentar)", user.getName(), project.getTitle());
+    }
+
     @Transactional(readOnly = true)
     public List<ContributionScore> getScores(Long projectId) {
         return scoreRepository.findByProjectIdOrderByScoreDesc(projectId);

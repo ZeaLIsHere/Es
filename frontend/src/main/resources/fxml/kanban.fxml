@@ -14,7 +14,7 @@
             <!-- Top bar -->
             <HBox alignment="CENTER_LEFT" spacing="14"
                   style="-fx-background-color: #0F172A; -fx-padding: 12 24 12 20;">
-                <Button text="← Dashboard" onAction="#handleBack"
+                <Button text="← Detail Proyek" onAction="#handleBack"
                         style="-fx-background-color: transparent; -fx-text-fill: #94A3B8;
                                -fx-font-size: 12px; -fx-cursor: hand;
                                -fx-border-color: #334155; -fx-border-radius: 6;

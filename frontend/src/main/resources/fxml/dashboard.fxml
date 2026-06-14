@@ -34,19 +34,12 @@
                   style="-fx-padding: 16 16 16 16;
                          -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
 
-                <StackPane alignment="CENTER_LEFT" prefWidth="56" prefHeight="56">
-                    <Circle fx:id="avatarCircle" radius="28"
-                            style="-fx-fill: #4F46E5;"/>
+                <StackPane prefWidth="56" prefHeight="56">
+                    <Rectangle width="56" height="56" arcWidth="12" arcHeight="12"
+                               style="-fx-fill: #0F172A;"/>
                     <Label fx:id="avatarInitials" text="?"
                            style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"
                            StackPane.alignment="CENTER"/>
-                    <ImageView fx:id="profilePhoto" fitWidth="56" fitHeight="56"
-                               preserveRatio="false" smooth="true" visible="false"
-                               StackPane.alignment="CENTER">
-                        <clip>
-                            <Circle centerX="28" centerY="28" radius="28"/>
-                        </clip>
-                    </ImageView>
                 </StackPane>
 
                 <Label text="AKUN SAYA"
@@ -67,12 +60,6 @@
                                   -fx-padding: 3 10 3 10;"/>
                 </HBox>
 
-                <Button text="Edit Profil" onAction="#handleEditProfile"
-                        style="-fx-background-color: transparent; -fx-text-fill: #94A3B8;
-                               -fx-font-size: 11px; -fx-background-radius: 8;
-                               -fx-padding: 5 12 5 12; -fx-cursor: hand;
-                               -fx-border-color: #334155; -fx-border-radius: 8; -fx-border-width: 1;
-                               -fx-alignment: CENTER_LEFT;"/>
             </VBox>
 
             <!-- Navigation -->
@@ -81,13 +68,17 @@
                        style="-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #475569;
                               -fx-padding: 16 0 6 20;"/>
                 <Button text="  Dashboard"
-                        style="-fx-background-color: #1E293B; -fx-text-fill: white;
-                               -fx-font-size: 13px; -fx-font-weight: bold;
-                               -fx-alignment: CENTER_LEFT; -fx-padding: 10 16 10 17;
-                               -fx-background-radius: 0; -fx-cursor: hand;
-                               -fx-max-width: Infinity; -fx-pref-width: 220;
-                               -fx-border-color: transparent transparent transparent #4F46E5;
-                               -fx-border-width: 0 0 0 3;"/>
+                        styleClass="sidebar-nav-btn-active"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Proyek" onAction="#handleProyek"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Notifikasi" onAction="#handleNotifikasi"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Profil" onAction="#handleProfil"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
             </VBox>
 
             <!-- Spacer -->
@@ -120,12 +111,6 @@
                            style="-fx-font-size: 12px; -fx-text-fill: #94A3B8;"/>
                 </VBox>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="newProjectButton" text="+ Buat Proyek Baru"
-                        onAction="#handleNewProject"
-                        style="-fx-background-color: #4F46E5; -fx-text-fill: white;
-                               -fx-font-size: 13px; -fx-font-weight: bold;
-                               -fx-background-radius: 10; -fx-padding: 9 20 9 20;
-                               -fx-cursor: hand;"/>
             </HBox>
 
             <ScrollPane fitToWidth="true"
@@ -207,7 +192,7 @@
                             <Label text="Proyek Saya"
                                    style="-fx-font-size: 16px; -fx-font-weight: bold;
                                           -fx-text-fill: #1E293B;"/>
-                            <Label text="Klik proyek untuk membuka Kanban board"
+                            <Label text="Klik proyek untuk melihat detail"
                                    style="-fx-font-size: 11px; -fx-text-fill: #94A3B8;"/>
                         </VBox>
                         <Region HBox.hgrow="ALWAYS"/>

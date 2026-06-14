@@ -6,8 +6,7 @@ import com.taskforge.ui.service.ApiClient;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import com.taskforge.ui.util.SceneNavigator;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -104,12 +103,9 @@ public class RegisterController {
 
     private void goToLogin() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Stage stage = (Stage) registerButton.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 420, 480);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — Login");
+            SceneNavigator.navigate(stage, "/fxml/login.fxml", "TaskForge — Login", 480, 660, false);
+            stage.setResizable(false);
         } catch (Exception ex) {
             showError("Gagal kembali ke halaman login");
         }

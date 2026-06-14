@@ -7,6 +7,7 @@ import com.taskforge.ui.model.ApiResponse;
 import com.taskforge.ui.model.ProjectModel;
 import com.taskforge.ui.model.ScoreModel;
 import com.taskforge.ui.service.ApiClient;
+import com.taskforge.ui.util.SceneNavigator;
 import com.taskforge.ui.session.SessionManager;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -175,14 +176,10 @@ public class ReportScoreController {
     @FXML
     public void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/kanban.fxml"));
             Stage stage = (Stage) projectTitleLabel.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1200, 700);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            KanbanController ctrl = loader.getController();
+            KanbanController ctrl = SceneNavigator.navigate(
+                    stage, "/fxml/kanban.fxml", "TaskForge — " + currentProject.getTitle(), 1200, 700);
             ctrl.initWithProject(currentProject);
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — " + currentProject.getTitle());
         } catch (Exception e) {
             statusLabel.setText("Gagal kembali: " + e.getMessage());
         }

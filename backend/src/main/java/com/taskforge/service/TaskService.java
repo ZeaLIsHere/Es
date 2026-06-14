@@ -94,6 +94,27 @@ public class TaskService {
         TaskStatus oldStatus = task.getStatus();
         TaskStatus newStatus = request.getStatus();
 
+        boolean isKetua = actor.getRole() == com.taskforge.model.User.Role.KETUA;
+        boolean isAssignee = task.getAssignee() != null && task.getAssignee().getId().equals(actor.getId());
+
+        // State transition validations
+        if (newStatus == TaskStatus.REVIEW && oldStatus == TaskStatus.IN_PROGRESS) {
+            // Require at least 1 file uploaded by assignee if moved by assignee
+            if (isAssignee && !isKetua) {
+                boolean hasUploadedFile = task.getFiles().stream()
+                        .anyMatch(f -> f instanceof com.taskforge.model.file.UploadedFile &&
+                                f.getUploadedBy().getId().equals(actor.getId()));
+                if (!hasUploadedFile) {
+                    throw new ValidationException("Anda harus mengunggah file hasil kerja (ZIP, PPT, PDF, DOCX, PNG, dll) sebelum mengirim ke tahap Review.");
+                }
+            }
+        } else if (newStatus == TaskStatus.DONE || (oldStatus == TaskStatus.REVIEW && newStatus == TaskStatus.IN_PROGRESS)) {
+            // Only KETUA can approve (move to DONE) or reject (move back to IN_PROGRESS)
+            if (!isKetua) {
+                throw new ValidationException("Hanya Ketua Kelompok yang dapat memberikan Approval atau meminta Revision.");
+            }
+        }
+
         if (newStatus == TaskStatus.DONE) {
             task.complete();
         } else {

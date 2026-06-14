@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.taskforge.ui.controller.TaskDetailModalController"
+      spacing="16" style="-fx-background-color: white; -fx-padding: 24; -fx-background-radius: 8;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Detail Task" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1F2937;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="✕" onAction="#handleClose"
+                style="-fx-background-color: transparent; -fx-text-fill: #9CA3AF; -fx-font-size: 16px; -fx-cursor: hand;"/>
+    </HBox>
+
+    <!-- Title and Description -->
+    <VBox spacing="4">
+        <Label text="JUDUL" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+        <Label fx:id="titleLabel" text="Task Title" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #111827; -fx-wrap-text: true;"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="DESKRIPSI" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+        <Label fx:id="descLabel" text="Task Description" style="-fx-font-size: 14px; -fx-text-fill: #4B5563; -fx-wrap-text: true;"/>
+    </VBox>
+
+    <!-- 2x2 Grid Info -->
+    <GridPane hgap="12" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="50"/>
+            <ColumnConstraints percentWidth="50"/>
+        </columnConstraints>
+
+        <!-- Status -->
+        <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="4"
+              style="-fx-background-color: #F9FAFB; -fx-padding: 12; -fx-background-radius: 8;">
+            <Label text="STATUS" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+            <Label fx:id="statusLabel" text="TO-DO" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1F2937;"/>
+        </VBox>
+
+        <!-- Priority -->
+        <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="4"
+              style="-fx-background-color: #F9FAFB; -fx-padding: 12; -fx-background-radius: 8;">
+            <Label text="PRIORITAS" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+            <Label fx:id="priorityLabel" text="MEDIUM" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #F59E0B;"/>
+        </VBox>
+
+        <!-- Assignee -->
+        <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="4"
+              style="-fx-background-color: #F9FAFB; -fx-padding: 12; -fx-background-radius: 8;">
+            <Label text="DITUGASKAN KE" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+            <Label fx:id="assigneeLabel" text="User Name" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1F2937;"/>
+        </VBox>
+
+        <!-- Due Date -->
+        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="4"
+              style="-fx-background-color: #F9FAFB; -fx-padding: 12; -fx-background-radius: 8;">
+            <Label text="DUE DATE" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+            <Label fx:id="deadlineLabel" text="YYYY-MM-DD" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #1F2937;"/>
+        </VBox>
+    </GridPane>
+
+    <!-- File Section -->
+    <VBox spacing="8" style="-fx-border-color: #E5E7EB; -fx-border-radius: 8; -fx-padding: 16;">
+        <Label fx:id="fileCountLabel" text="FILE PROGRESS (0)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #4B5563;"/>
+        <VBox fx:id="fileListContainer" spacing="4">
+            <!-- Files will be injected here -->
+            <Label fx:id="noFileLabel" text="Belum ada file yang diunggah" style="-fx-text-fill: #9CA3AF; -fx-font-size: 13px;"/>
+        </VBox>
+        <Button fx:id="uploadFileBtn" text="↑ Upload File" onAction="#handleUploadFile"
+                style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 6; -fx-background-radius: 6; -fx-text-fill: #4B5563; -fx-cursor: hand; -fx-padding: 6 12;"/>
+    </VBox>
+
+    <!-- Comments Section -->
+    <VBox spacing="8">
+        <Label fx:id="commentCountLabel" text="KOMENTAR (0)" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #9CA3AF;"/>
+        
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" prefHeight="150">
+            <VBox fx:id="commentListContainer" spacing="10" style="-fx-padding: 5;"/>
+        </ScrollPane>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <TextField fx:id="commentField" promptText="Tulis komentar..." HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: white; -fx-border-color: #E5E7EB; -fx-border-radius: 8; -fx-padding: 8 12; -fx-font-size: 13px;"/>
+            <Button text="Kirim" onAction="#handleSendComment"
+                    style="-fx-background-color: #9CA3AF; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 16; -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Action Buttons (Move status / approve / reject) -->
+    <HBox fx:id="actionButtonsContainer" spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0; -fx-border-color: #E5E7EB transparent transparent transparent; -fx-border-width: 1 0 0 0;">
+        <Label fx:id="statusInfoLabel" text="" style="-fx-text-fill: #DC2626; -fx-font-size: 12px;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Action buttons will be injected here dynamically -->
+    </HBox>
+
+</VBox>
