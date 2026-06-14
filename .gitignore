@@ -95,3 +95,6 @@ application-secret.properties
 CLAUDE.md
 PRD_TaskForge.md
 SRS_TaskForge.md
+
+# ==================== AI TOOLS ====================
+.claude/
