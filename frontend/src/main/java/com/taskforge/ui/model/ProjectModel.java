@@ -13,6 +13,7 @@ public class ProjectModel {
     private String description;
     private LocalDateTime deadline;
     private LocalDateTime createdAt;
+    private Integer maxMembers;
     private UserModel owner;
     private List<UserModel> members;
     private int taskCount;
@@ -33,6 +34,9 @@ public class ProjectModel {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public Integer getMaxMembers() { return maxMembers != null ? maxMembers : 4; }
+    public void setMaxMembers(Integer maxMembers) { this.maxMembers = maxMembers; }
 
     public UserModel getOwner() { return owner; }
     public void setOwner(UserModel owner) { this.owner = owner; }

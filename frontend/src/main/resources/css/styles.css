@@ -236,6 +236,9 @@
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 10 16 10 20;
     -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: null;
     -fx-cursor: hand;
     -fx-max-width: Infinity;
 }
@@ -253,6 +256,9 @@
     -fx-alignment: CENTER_LEFT;
     -fx-padding: 10 16 10 17;
     -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: null;
     -fx-cursor: hand;
     -fx-max-width: Infinity;
     -fx-border-color: transparent transparent transparent #4F46E5;
@@ -273,6 +279,114 @@
 .sidebar-logout-btn:hover {
     -fx-background-color: #1E293B;
     -fx-text-fill: #FCA5A5;
+}
+
+/* ==================== PROYEK TABS ==================== */
+.proyek-tab {
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #64748B;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: null;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.proyek-tab:hover {
+    -fx-background-color: #CBD5E1;
+    -fx-text-fill: #475569;
+}
+
+.proyek-tab-active {
+    -fx-background-color: white;
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 6, 0, 0, 2);
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+/* ==================== PROFIL PAGE ==================== */
+.profil-card {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 12, 0, 0, 3);
+}
+
+.profil-field-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #94A3B8;
+}
+
+.profil-input {
+    -fx-background-color: white;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 10 14 10 14;
+    -fx-font-size: 14px;
+    -fx-pref-height: 42;
+}
+
+.profil-input:focused {
+    -fx-border-color: #6366F1;
+}
+
+.profil-role-badge {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4338CA;
+    -fx-background-color: #EEF2FF;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10 3 10;
+}
+
+.profil-password-btn {
+    -fx-background-color: #F1F5F9;
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: null;
+    -fx-padding: 10 18 10 18;
+    -fx-cursor: hand;
+}
+
+.profil-password-btn:hover {
+    -fx-background-color: #E2E8F0;
+}
+
+.profil-save-btn {
+    -fx-background-color: #0F172A;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-effect: null;
+    -fx-padding: 10 22 10 22;
+    -fx-cursor: hand;
+}
+
+.profil-save-btn:hover {
+    -fx-background-color: #1E293B;
 }
 
 /* ==================== STAT CARDS ==================== */

@@ -8,6 +8,7 @@ import com.taskforge.ui.model.ProjectModel;
 import com.taskforge.ui.model.TaskModel;
 import com.taskforge.ui.model.UserModel;
 import com.taskforge.ui.service.ApiClient;
+import com.taskforge.ui.util.SceneNavigator;
 import com.taskforge.ui.session.SessionManager;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -17,7 +18,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -45,6 +50,11 @@ public class KanbanController {
         addTaskButton.setVisible(isKetua);
         addTaskButton.setManaged(isKetua);
 
+        setupDragAndDrop();
+        loadTasks();
+    }
+
+    public void refreshData() {
         loadTasks();
     }
 
@@ -111,7 +121,7 @@ public class KanbanController {
         card.setPadding(new Insets(10, 12, 10, 12));
         card.setMaxWidth(Double.MAX_VALUE);
 
-        // Overdue styling (red card background)
+        // Overdue styling
         if (task.isOverdue()) {
             card.getStyleClass().addAll("task-card", "task-card-overdue");
         } else {
@@ -143,47 +153,83 @@ public class KanbanController {
         Label deadlineLabel = new Label("📅 " + task.getDeadlineLabel());
         deadlineLabel.setStyle(deadlineStyle);
 
-        // Move buttons
-        HBox controls = new HBox(4);
-        controls.setAlignment(Pos.CENTER_RIGHT);
-        controls.setMaxWidth(Double.MAX_VALUE);
+        card.getChildren().addAll(titleRow, assigneeLabel, deadlineLabel);
 
+        // Click to open Detail Modal
+        card.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 1) {
+                showTaskDetailModal(task);
+            }
+        });
+
+        // Drag and Drop
         boolean isKetua = SessionManager.getInstance().isKetua();
         boolean isMyTask = isMyTask(task);
         boolean canMove = isKetua || isMyTask;
 
         if (canMove) {
-            String prevStatus = task.getPrevStatus();
-            String nextStatus = task.getNextStatus();
-
-            if (prevStatus != null && isKetua) {
-                Button prevBtn = new Button("←");
-                prevBtn.setStyle("-fx-font-size: 11px; -fx-padding: 2 6 2 6; -fx-background-color: #E5E7EB; -fx-background-radius: 4px; -fx-cursor: hand;");
-                prevBtn.setOnAction(e -> moveTask(task, prevStatus));
-                controls.getChildren().add(prevBtn);
-            }
-            if (nextStatus != null) {
-                Button nextBtn = new Button("→");
-                nextBtn.setStyle("-fx-font-size: 11px; -fx-padding: 2 6 2 6; -fx-background-color: #2563EB; -fx-text-fill: white; -fx-background-radius: 4px; -fx-cursor: hand;");
-                nextBtn.setOnAction(e -> moveTask(task, nextStatus));
-                controls.getChildren().add(nextBtn);
-            }
-        }
-
-        // Delete button (KETUA only)
-        if (isKetua) {
-            Button deleteBtn = new Button("✕");
-            deleteBtn.setStyle("-fx-font-size: 10px; -fx-padding: 2 5 2 5; -fx-background-color: #FEE2E2; -fx-text-fill: #DC2626; -fx-background-radius: 4px; -fx-cursor: hand;");
-            deleteBtn.setOnAction(e -> deleteTask(task));
-            controls.getChildren().add(deleteBtn);
-        }
-
-        card.getChildren().addAll(titleRow, assigneeLabel, deadlineLabel);
-        if (!controls.getChildren().isEmpty()) {
-            card.getChildren().add(controls);
+            card.setOnDragDetected(e -> {
+                Dragboard db = card.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(task.getId().toString() + ":" + task.getStatus());
+                db.setContent(content);
+                e.consume();
+            });
+            card.setStyle(card.getStyle() + "; -fx-cursor: hand;");
         }
 
         return card;
+    }
+
+    private void setupDragAndDrop() {
+        setupColumnDropTarget(todoColumn, "TODO");
+        setupColumnDropTarget(inProgressColumn, "IN_PROGRESS");
+        setupColumnDropTarget(reviewColumn, "REVIEW");
+        setupColumnDropTarget(doneColumn, "DONE");
+    }
+
+    private void setupColumnDropTarget(VBox column, String status) {
+        column.setOnDragOver(e -> {
+            if (e.getGestureSource() != column && e.getDragboard().hasString()) {
+                e.acceptTransferModes(TransferMode.MOVE);
+            }
+            e.consume();
+        });
+        column.setOnDragDropped(e -> {
+            Dragboard db = e.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                String[] parts = db.getString().split(":");
+                Long taskId = Long.parseLong(parts[0]);
+                String oldStatus = parts[1];
+                if (!oldStatus.equals(status)) {
+                    TaskModel t = new TaskModel();
+                    t.setId(taskId);
+                    moveTask(t, status);
+                }
+                success = true;
+            }
+            e.setDropCompleted(success);
+            e.consume();
+        });
+    }
+
+    private void showTaskDetailModal(TaskModel task) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/task-detail-modal.fxml"));
+            javafx.scene.Parent root = loader.load();
+            TaskDetailModalController controller = loader.getController();
+            controller.initWithTask(task, this);
+
+            Stage stage = new Stage();
+            stage.setTitle("Detail Task - " + task.getTitle());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root, 600, 700));
+            stage.show();
+        } catch (Exception e) {
+            statusLabel.setText("Gagal membuka detail task: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private boolean isMyTask(TaskModel task) {
@@ -204,35 +250,20 @@ public class KanbanController {
         };
 
         updateTask.setOnSucceeded(e -> Platform.runLater(this::loadTasks));
-        updateTask.setOnFailed(e -> Platform.runLater(
-                () -> statusLabel.setText("Gagal memindahkan task: " + updateTask.getException().getMessage())));
+        updateTask.setOnFailed(e -> Platform.runLater(() -> {
+            statusLabel.setText("Gagal memindahkan: " + updateTask.getException().getMessage());
+            // Show alert for the validation exception (e.g. missing file)
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Gagal Memindahkan Task");
+            alert.setHeaderText(null);
+            alert.setContentText(updateTask.getException().getMessage());
+            alert.showAndWait();
+            loadTasks(); // refresh to snap back
+        }));
 
         Thread t = new Thread(updateTask);
         t.setDaemon(true);
         t.start();
-    }
-
-    private void deleteTask(TaskModel task) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Hapus task '" + task.getTitle() + "'?", ButtonType.YES, ButtonType.NO);
-        confirm.setHeaderText("Konfirmasi Hapus");
-        confirm.showAndWait().ifPresent(result -> {
-            if (result == ButtonType.YES) {
-                Task<Void> deleteApiTask = new Task<>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        ApiClient.delete("/api/tasks/" + task.getId(), Object.class);
-                        return null;
-                    }
-                };
-                deleteApiTask.setOnSucceeded(e -> Platform.runLater(this::loadTasks));
-                deleteApiTask.setOnFailed(e -> Platform.runLater(
-                        () -> statusLabel.setText("Gagal menghapus task")));
-                Thread t = new Thread(deleteApiTask);
-                t.setDaemon(true);
-                t.start();
-            }
-        });
     }
 
     @FXML
@@ -340,14 +371,10 @@ public class KanbanController {
     @FXML
     public void handleFileHub() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/filehub.fxml"));
             Stage stage = (Stage) projectTitleLabel.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1200, 700);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            FileHubController ctrl = loader.getController();
+            FileHubController ctrl = SceneNavigator.navigate(
+                    stage, "/fxml/filehub.fxml", "TaskForge — File Hub", 1200, 700);
             ctrl.initWithProject(currentProject);
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — File Hub");
         } catch (Exception e) {
             statusLabel.setText("Gagal membuka File Hub: " + e.getMessage());
         }
@@ -356,14 +383,10 @@ public class KanbanController {
     @FXML
     public void handleReport() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/report.fxml"));
             Stage stage = (Stage) projectTitleLabel.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1000, 680);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            ReportScoreController ctrl = loader.getController();
+            ReportScoreController ctrl = SceneNavigator.navigate(
+                    stage, "/fxml/report.fxml", "TaskForge — Kontribusi & Laporan", 1000, 680);
             ctrl.initWithProject(currentProject);
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — Kontribusi & Laporan");
         } catch (Exception e) {
             statusLabel.setText("Gagal membuka Laporan: " + e.getMessage());
         }
@@ -371,13 +394,25 @@ public class KanbanController {
 
     @FXML
     public void handleBack() {
+        if (currentProject == null) {
+            navigateToDashboard();
+            return;
+        }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
             Stage stage = (Stage) projectTitleLabel.getScene().getWindow();
-            Scene scene = new Scene(loader.load(), 1200, 700);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("TaskForge — Dashboard");
+            ProjectDetailController controller = SceneNavigator.navigate(
+                    stage, "/fxml/project-detail.fxml",
+                    "TaskForge — " + currentProject.getTitle(), 1100, 700);
+            controller.initWithProject(currentProject);
+        } catch (Exception e) {
+            statusLabel.setText("Gagal kembali ke detail proyek");
+        }
+    }
+
+    private void navigateToDashboard() {
+        try {
+            Stage stage = (Stage) projectTitleLabel.getScene().getWindow();
+            SceneNavigator.navigate(stage, "/fxml/dashboard.fxml", "TaskForge — Dashboard", 1100, 700);
         } catch (Exception e) {
             statusLabel.setText("Gagal kembali ke dashboard");
         }

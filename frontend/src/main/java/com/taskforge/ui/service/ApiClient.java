@@ -57,7 +57,8 @@ public class ApiClient {
         String boundary = "----Boundary" + System.currentTimeMillis();
         byte[] fileBytes = java.nio.file.Files.readAllBytes(file.toPath());
         String fileName = file.getName();
-        String contentType = fileName.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
+        String contentType = java.net.URLConnection.guessContentTypeFromName(fileName);
+        if (contentType == null) contentType = "application/octet-stream";
 
         byte[] body = buildMultipartBody(boundary, "file", fileName, contentType, fileBytes);
 
@@ -126,6 +127,12 @@ public class ApiClient {
 
     private static <T> ApiResponse<T> execute(HttpRequest request, Class<T> responseType) throws Exception {
         HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 204 || (response.body() != null && response.body().isBlank() && response.statusCode() >= 200 && response.statusCode() < 300)) {
+            ApiResponse<T> emptyRes = new ApiResponse<>();
+            emptyRes.setSuccess(true);
+            return emptyRes;
+        }
+
         JavaType type = MAPPER.getTypeFactory()
                 .constructParametricType(ApiResponse.class, responseType);
         try {

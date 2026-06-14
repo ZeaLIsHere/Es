@@ -6,6 +6,7 @@ import com.taskforge.dto.response.ProjectResponse;
 import com.taskforge.dto.response.UserResponse;
 import com.taskforge.exception.DuplicateResourceException;
 import com.taskforge.exception.ResourceNotFoundException;
+import com.taskforge.exception.ValidationException;
 import com.taskforge.model.ActivityLog.ActionType;
 import com.taskforge.model.Project;
 import com.taskforge.model.User;
@@ -54,6 +55,7 @@ public class ProjectService {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .deadline(request.getDeadline())
+                .maxMembers(request.getMaxMembers())
                 .owner(owner)
                 .build();
 
@@ -66,6 +68,14 @@ public class ProjectService {
     public List<ProjectResponse> getMyProjects(String actorEmail) {
         User user = getUser(actorEmail);
         return projectRepository.findAllByMemberOrOwner(user).stream()
+                .map(ProjectResponse::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectResponse> getAvailableProjects(String actorEmail) {
+        User user = getUser(actorEmail);
+        return projectRepository.findAvailableFor(user).stream()
                 .map(ProjectResponse::from)
                 .toList();
     }
@@ -110,6 +120,13 @@ public class ProjectService {
                 || project.getMembers().contains(newMember)) {
             throw new DuplicateResourceException(
                     request.getEmail() + " sudah menjadi anggota proyek ini");
+        }
+
+        int currentCount = 1 + project.getMembers().size();
+        int maxMembers = project.getMaxMembers() != null ? project.getMaxMembers() : 4;
+        if (currentCount >= maxMembers) {
+            throw new ValidationException(
+                    "Proyek sudah penuh (" + maxMembers + " anggota termasuk ketua)");
         }
 
         project.getMembers().add(newMember);

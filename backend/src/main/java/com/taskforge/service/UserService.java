@@ -1,15 +1,21 @@
 package com.taskforge.service;
 
+import com.taskforge.dto.request.ChangePasswordRequest;
 import com.taskforge.dto.request.UpdateProfileRequest;
+import com.taskforge.dto.response.ProfileUpdateResponse;
 import com.taskforge.dto.response.UserResponse;
+import com.taskforge.exception.DuplicateResourceException;
 import com.taskforge.exception.ResourceNotFoundException;
 import com.taskforge.exception.ValidationException;
 import com.taskforge.model.User;
 import com.taskforge.repository.UserRepository;
+import com.taskforge.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +33,8 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Value("${file.photo-dir}")
     private String photoDir;
@@ -39,14 +47,45 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse updateProfile(String email, UpdateProfileRequest request) {
+    public ProfileUpdateResponse updateProfile(String email, UpdateProfileRequest request) {
         User user = findByEmail(email);
+        String newEmail = request.getEmail().trim().toLowerCase();
+
+        if (!user.getEmail().equalsIgnoreCase(newEmail) && userRepository.existsByEmail(newEmail)) {
+            throw new DuplicateResourceException("Email sudah digunakan");
+        }
+
         user.setName(request.getName().trim());
+        user.setEmail(newEmail);
         user.setNim(request.getNim() != null && !request.getNim().isBlank()
                 ? request.getNim().trim() : null);
         User saved = userRepository.save(user);
         log.info("Profil user {} diperbarui", saved.getEmail());
-        return UserResponse.from(saved);
+
+        UserResponse userResponse = UserResponse.from(saved);
+        String newToken = null;
+        if (!email.equalsIgnoreCase(saved.getEmail())) {
+            newToken = jwtUtil.generateToken(saved.getId(), saved.getEmail(), saved.getRole().name());
+        }
+
+        return ProfileUpdateResponse.builder()
+                .user(userResponse)
+                .token(newToken)
+                .build();
+    }
+
+    @Transactional
+    public void changePassword(String email, ChangePasswordRequest request) {
+        User user = findByEmail(email);
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Password lama tidak sesuai");
+        }
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new ValidationException("Password baru harus berbeda dari password lama");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        log.info("Password user {} diperbarui", user.getEmail());
     }
 
     @Transactional

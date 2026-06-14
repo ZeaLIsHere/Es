@@ -1,7 +1,9 @@
 package com.taskforge.controller;
 
 import com.taskforge.common.ApiResponse;
+import com.taskforge.dto.request.ChangePasswordRequest;
 import com.taskforge.dto.request.UpdateProfileRequest;
+import com.taskforge.dto.response.ProfileUpdateResponse;
 import com.taskforge.dto.response.UserResponse;
 import com.taskforge.service.UserService;
 import jakarta.validation.Valid;
@@ -30,11 +32,19 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<ApiResponse<UserResponse>> updateProfile(
+    public ResponseEntity<ApiResponse<ProfileUpdateResponse>> updateProfile(
             @Valid @RequestBody UpdateProfileRequest request,
             Authentication authentication) {
         return ResponseEntity.ok(ApiResponse.success("Profil berhasil diperbarui",
                 userService.updateProfile(authentication.getName(), request)));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            Authentication authentication) {
+        userService.changePassword(authentication.getName(), request);
+        return ResponseEntity.ok(ApiResponse.success("Password berhasil diperbarui", null));
     }
 
     @PostMapping(value = "/me/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

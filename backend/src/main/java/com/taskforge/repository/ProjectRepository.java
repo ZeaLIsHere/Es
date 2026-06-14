@@ -12,4 +12,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p WHERE p.owner = :user OR :user MEMBER OF p.members")
     List<Project> findAllByMemberOrOwner(@Param("user") User user);
+
+    @Query("SELECT p FROM Project p WHERE p.owner <> :user AND :user NOT MEMBER OF p.members")
+    List<Project> findAvailableFor(@Param("user") User user);
 }

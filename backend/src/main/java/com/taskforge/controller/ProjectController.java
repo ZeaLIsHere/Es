@@ -33,6 +33,11 @@ public class ProjectController {
         return ResponseEntity.ok(ApiResponse.success(projectService.getMyProjects(auth.getName())));
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<ApiResponse<List<ProjectResponse>>> getAvailableProjects(Authentication auth) {
+        return ResponseEntity.ok(ApiResponse.success(projectService.getAvailableProjects(auth.getName())));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('KETUA')")
     public ResponseEntity<ApiResponse<ProjectResponse>> createProject(

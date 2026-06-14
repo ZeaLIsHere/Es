@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.taskforge.ui.controller.ProfilController"
+            style="-fx-background-color: #F8FAFC;">
+
+    <left>
+        <VBox minWidth="220" prefWidth="220" maxWidth="220" spacing="0"
+              style="-fx-background-color: #0F172A;">
+
+            <HBox alignment="CENTER_LEFT" spacing="10"
+                  style="-fx-padding: 16 16 16 16;
+                         -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
+                <ImageView fitWidth="34" fitHeight="34" preserveRatio="true" smooth="true">
+                    <image><Image url="@/images/taskforge-icon-48.png"/></image>
+                </ImageView>
+                <HBox spacing="0" alignment="CENTER_LEFT">
+                    <Label text="Task"
+                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                    <Label text="Forge"
+                           style="-fx-font-size: 17px; -fx-font-weight: bold; -fx-text-fill: #6366F1;"/>
+                </HBox>
+            </HBox>
+
+            <VBox spacing="6"
+                  style="-fx-padding: 16 16 16 16;
+                         -fx-border-color: #1E293B; -fx-border-width: 0 0 1 0;">
+                <StackPane prefWidth="56" prefHeight="56">
+                    <Rectangle width="56" height="56" arcWidth="12" arcHeight="12"
+                               style="-fx-fill: #0F172A;"/>
+                    <Label fx:id="avatarInitials" text="?"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"
+                           StackPane.alignment="CENTER"/>
+                </StackPane>
+
+                <Label text="AKUN SAYA"
+                       style="-fx-font-size: 9px; -fx-font-weight: bold;
+                              -fx-text-fill: #475569; -fx-padding: 6 0 0 0;"/>
+                <Label fx:id="sidebarNameLabel"
+                       style="-fx-font-size: 13px; -fx-font-weight: bold;
+                              -fx-text-fill: #F1F5F9; -fx-wrap-text: true;"
+                       maxWidth="188"/>
+                <Label fx:id="sidebarNimLabel" text=""
+                       style="-fx-font-size: 11px; -fx-text-fill: #64748B;"/>
+
+                <HBox alignment="CENTER_LEFT">
+                    <Label fx:id="sidebarRoleLabel"
+                           style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #A5B4FC;
+                                  -fx-background-color: #1E1B4B; -fx-background-radius: 20;
+                                  -fx-padding: 3 10 3 10;"/>
+                </HBox>
+
+            </VBox>
+
+            <VBox spacing="0">
+                <Label text="WORKSPACE"
+                       style="-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #475569;
+                              -fx-padding: 16 0 6 20;"/>
+                <Button text="  Dashboard" onAction="#handleDashboard"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Proyek" onAction="#handleProyek"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Notifikasi" onAction="#handleNotifikasi"
+                        styleClass="sidebar-nav-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+                <Button text="  Profil"
+                        styleClass="sidebar-nav-btn-active"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox style="-fx-border-color: #1E293B; -fx-border-width: 1 0 0 0;">
+                <Button text="  Keluar" onAction="#handleLogout"
+                        styleClass="sidebar-logout-btn"
+                        style="-fx-max-width: Infinity; -fx-pref-width: 220;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox spacing="0" style="-fx-padding: 24 28 32 28;">
+
+                <Label text="Profil"
+                       style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0F172A;
+                              -fx-padding: 0 0 20 0;"/>
+
+                <VBox maxWidth="720" spacing="0" styleClass="profil-card">
+
+                    <!-- Card Header -->
+                    <HBox spacing="16" alignment="CENTER_LEFT"
+                          style="-fx-padding: 24 28 20 28;
+                                 -fx-border-color: #F1F5F9; -fx-border-width: 0 0 1 0;">
+                        <StackPane prefWidth="64" prefHeight="64">
+                            <Rectangle width="64" height="64" arcWidth="14" arcHeight="14"
+                                       style="-fx-fill: #0F172A;"/>
+                            <Label fx:id="cardInitials" text="?"
+                                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;"
+                                   StackPane.alignment="CENTER"/>
+                        </StackPane>
+                        <VBox spacing="4">
+                            <Label fx:id="cardNameLabel" text="-"
+                                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label fx:id="cardRoleLabel" text="KETUA"
+                                       styleClass="profil-role-badge"/>
+                                <Label fx:id="cardNimLabel" text=""
+                                       style="-fx-font-size: 12px; -fx-text-fill: #94A3B8;"/>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Form -->
+                    <VBox spacing="18" style="-fx-padding: 24 28 24 28;">
+                        <VBox spacing="6">
+                            <Label text="NAMA LENGKAP" styleClass="profil-field-label"/>
+                            <TextField fx:id="nameField" styleClass="profil-input"/>
+                        </VBox>
+                        <VBox spacing="6">
+                            <Label text="EMAIL" styleClass="profil-field-label"/>
+                            <TextField fx:id="emailField" styleClass="profil-input"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Actions -->
+                    <HBox spacing="12" alignment="CENTER_LEFT"
+                          style="-fx-padding: 0 28 24 28;">
+                        <Button text="  Ubah Password" onAction="#handleChangePassword"
+                                styleClass="profil-password-btn"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Simpan Perubahan" onAction="#handleSaveProfile"
+                                styleClass="profil-save-btn"/>
+                    </HBox>
+
+                    <Label fx:id="statusLabel" wrapText="true" maxWidth="664"
+                           style="-fx-padding: 0 28 20 28; -fx-font-size: 13px;"/>
+
+                </VBox>
+
+                <ProgressIndicator fx:id="loadingIndicator"
+                                   prefWidth="36" prefHeight="36" visible="false"
+                                   style="-fx-padding: 12 0 0 0;"/>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
